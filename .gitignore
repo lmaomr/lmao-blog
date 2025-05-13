@@ -1,0 +1,57 @@
+# ==================== 通用规则 ====================
+# 操作系统生成文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE配置文件
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# 日志文件
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 环境变量文件
+.env
+.env.local
+.env.development
+.env.production
+
+# ==================== 前端项目规则 ====================
+/blog-fronted/node_modules/
+/blog-fronted/dist/
+/blog-fronted/.cache/
+/blog-fronted/.nuxt/
+/blog-fronted/.output/
+/blog-fronted/.temp/
+
+# 前端构建产物
+/blog-fronted/*.js.map
+/blog-fronted/*.css.map
+
+# ==================== 后端项目规则 ====================
+/blog-backend/__pycache__/
+/blog-backend/*.py[cod]
+/blog-backend/*.so
+/blog-backend/.Python
+/blog-backend/venv/
+
+# 数据库文件
+/blog-backend/*.sqlite3
+/blog-backend/*.db
+
+# ==================== 特殊例外规则 ====================
+# 保留README文件
+!README.md
+
+# 保留必要的配置文件（示例）
+!blog-fronted/config/
+!blog-backend/config/
