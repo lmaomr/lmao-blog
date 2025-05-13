@@ -2,6 +2,7 @@
 // 导入必要的函数和库
 import { defineStore } from 'pinia'  // Pinia的状态管理库
 import { ref, computed } from 'vue'  // Vue的响应式API
+import { isTokenValid } from '@/api/valid'  // 自定义的验证工具函数
 
 // 定义一个名为'user'的Pinia store
 export const useUserStore = defineStore('user', () => {
@@ -49,7 +50,7 @@ export const useUserStore = defineStore('user', () => {
 
     // 将token和userInfo持久化到localStorage
     localStorage.setItem('token', token.value)
-    localStorage.setItem('userInfo', JSON.stringify(userInfo.value))
+    localStorage.setItem('userInfo', JSON.stringify(responseData.data))
     localStorage.setItem('isLoggedIn', isLoggedIn.value)
   }
 
@@ -70,23 +71,21 @@ export const useUserStore = defineStore('user', () => {
     try {
       token.value = localStorage.getItem('token');
 
-      userInfo.value = localStorage.getItem('userInfo') 
-      ? JSON.parse(localStorage.getItem('userInfo')) 
-      : getDefaultUserInfo(); // ✅ 正确解析
-      
+      userInfo.value = localStorage.getItem('userInfo')
+        ? JSON.parse(localStorage.getItem('userInfo'))
+        : getDefaultUserInfo(); // ✅ 正确解析
+
       // 验证token有效性（可选）
-      //   const isValid = storedToken && validateToken(storedToken) 
+      const isValid = token && isTokenValid(token.value);
 
       // 同步状态
-      //   token.value = isValid ? storedToken : null
-      //   userInfo.value = isValid && storedUser ? 
-      //     JSON.parse(storedUser) : null
+      token.value = isValid ? token : null
 
       // 清理无效存储
-      //   if (!isValid) {
-      //     localStorage.removeItem('token')
-      //     localStorage.removeItem('userInfo')
-      //   }
+      if (!isValid) {
+        localStorage.removeItem('token')
+        localStorage.setItem('userInfo', JSON.stringify(getDefaultUserInfo()))
+      }
     } catch (error) {
       console.error('登录状态检查失败:', error);
       logout(); // 直接调用 logout 清理状态

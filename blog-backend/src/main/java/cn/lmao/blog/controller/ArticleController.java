@@ -38,7 +38,6 @@ public class ArticleController {
     public ResponseEntity<Map<String, Object>> findAllArticles(Pageable pageable) {
         //计算查询时间
         long startTime = System.currentTimeMillis();
-        System.out.println("这是前端传过来的分页数据：" + pageable);
         Map<String, Object> response = new HashMap<>();
         Page<ArticleDTO> articles = articleService.getAllArticles(pageable);
         response.put("code", 200);
