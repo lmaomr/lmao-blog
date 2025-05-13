@@ -1,0 +1,105 @@
+spring:
+  datasource:
+    # 数据库连接URL配置
+    url: jdbc:mysql://localhost:3306/lmao_blog?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    # 数据库用户名
+    username: root
+    # 数据库密码（生产环境必须使用环境变量或配置中心）
+    password: 123456
+    # JDBC驱动类（MySQL 8.0+必须使用cj驱动）
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    
+    # HikariCP连接池配置（生产环境核心配置）
+    hikari:
+      # 最大连接数（建议值：CPU核数*2 + 1）
+      maximum-pool-size: 10
+      # 连接获取超时时间（ms），超过则抛异常
+      connection-timeout: 30000
+      # 空闲连接存活时间（ms），超时自动回收
+      idle-timeout: 600000
+      # 连接最大生命周期（ms），到期强制重建
+      max-lifetime: 1800000
+      # 连接泄漏检测阈值（ms，建议生产环境添加）
+      leak-detection-threshold: 5000
+
+  jpa:
+    # 是否显示SQL日志（开发环境开启，生产环境关闭）
+    show-sql: false
+    # 关闭OSIV（Open Session In View）模式，避免LazyLoading问题
+    open-in-view: false
+    # 数据库初始化策略（开发环境使用update，生产必须改为validate/none）
+    hibernate:
+      ddl-auto: update
+    
+    # JPA扩展属性
+    properties:
+      # 格式化输出的SQL（方便阅读）
+      hibernate:
+        format_sql: true
+        # 生产环境建议添加的优化配置
+        # jdbc.batch_size: 20
+        # order_inserts: true
+        # order_updates: true
+
+        # 指定 Hibernate 方言为 MySQL 8
+        # 这会启用 MySQL 8 特有的语法和功能
+        dialect: org.hibernate.dialect.MySQLDialect
+        
+        connection:
+          # 设置连接字符编码为 utf8mb4
+          # 确保数据库连接使用正确的字符集
+          characterEncoding: utf8mb4
+          
+          # 指定字符集为 utf8mb4
+          # 覆盖默认字符集设置
+          CharSet: utf8mb4
+          
+          # 启用 Unicode 支持
+          # 允许处理非ASCII字符
+          useUnicode: true
+
+  # 服务器配置
+  server:
+    # 服务端口号（注意不要与已有服务冲突）
+    port: 8080
+    # 生产环境建议添加的压缩配置
+    # compression:
+    #   enabled: true
+    #   mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    #   min-response-size: 1024
+
+  security:
+    # CSRF防护（生产环境必须开启）
+    csrf:
+      enabled: true
+    # 关闭默认的HTTP头部保护（可选）
+    # headers:
+    #   frame-options:
+    #     same-origin: true
+    # 允许跨域请求（开发环境使用，生产环境必须使用网关或API网关）
+    cors:
+      # allowed-origins: "*"
+      # allowed-methods: "*"
+      # allowed-headers: "*"
+      # allow-credentials: true
+      # max-age: 3600
+
+  logging:
+    level:
+      root: OFF  # 关闭所有日志
+      cn.lmao.blog: INFO  # 只显示你的应用程序的日志
+    
+    # user:
+    #   # 默认用户账号（生产环境必须使用环境变量或配置中心）
+    #   username: user
+    #   # 默认用户密码（生产环境必须使用环境变量或配置中心）
+    #   password: 123456
+    #   # # 默认用户角色（生产环境必须使用环境变量或配置中心）
+    #   # role: ADMIN
+    #   # # 默认用户权限（生产环境必须使用环境变量或配置中心）
+    #   # permission: ADMIN
+
+# JWT配置
+jwt:
+  secret: LmaoBlog2024@#$%^&*()_+SecretKey123456789
+  expiration: 86400000  # 24小时

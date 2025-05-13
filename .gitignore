@@ -43,6 +43,8 @@ yarn-error.log*
 /blog-backend/*.so
 /blog-backend/.Python
 /blog-backend/venv/
+/blog-backend/target/
+/blog-backend/.mvn/
 
 # 数据库文件
 /blog-backend/*.sqlite3

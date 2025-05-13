@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章管理接口测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .endpoint {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #4CAF50;
+            margin-top: 0;
+        }
+
+        button {
+            padding: 8px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .admin-section {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>文章管理接口测试</h1>
+
+        <!-- 获取所有文章 -->
+        <div class="endpoint">
+            <h2>获取所有文章</h2>
+            <p>测试接口: <code>GET /api/article</code></p>
+            <button onclick="getAllArticles()">获取所有文章</button>
+            <pre id="getAllArticlesResult">点击按钮获取数据...</pre>
+        </div>
+
+        <!-- 获取单个文章 -->
+        <div class="endpoint">
+            <h2>获取单个文章</h2>
+            <p>测试接口: <code>GET /api/article/{id}</code></p>
+            <div class="form-group">
+                <label for="articleId">文章ID:</label>
+                <input type="number" id="articleId" placeholder="输入文章ID">
+                <button onclick="getArticleById('get')">查询文章</button>
+            </div>
+            <pre id="getArticleResult">结果将显示在这里...</pre>
+        </div>
+
+        <!-- 管理员操作区域 -->
+        <div class="admin-section">
+            <h2>管理员操作</h2>
+
+            <!-- 创建文章 -->
+            <div class="endpoint">
+                <h3>创建文章</h3>
+                <p>测试接口: <code>POST /api/article/admin/create</code></p>
+                <div class="form-group">
+                    <label for="articleTitle">标题:</label>
+                    <input type="text" id="createTitle" placeholder="文章标题">
+
+                    <label for="articleContent">内容:</label>
+                    <textarea id="createContent" placeholder="文章内容"></textarea>
+
+                    <label for="articleAuthor">作者:</label>
+                    <input type="text" id="createAuthor" placeholder="作者"></input>
+
+                    <button onclick="createArticle()">创建文章</button>
+                </div>
+                <pre id="createArticleResult">结果将显示在这里...</pre>
+            </div>
+
+            <!-- 更新文章 -->
+            <div class="endpoint">
+                <h3>更新文章</h3>
+                <p>测试接口: <code>PUT /api/article/admin/update/{id}</code></p>
+                <div class="form-group">
+                    <label for="updateArticleId">文章ID:</label>
+                    <input type="number" id="updateArticleId" placeholder="输入要更新的文章ID">
+                    <label for="articleTitle">标题:</label>
+                    <input type="text" id="updateTitle" placeholder="文章标题">
+
+                    <label for="articleContent">内容:</label>
+                    <textarea id="updateContent" placeholder="文章内容"></textarea>
+
+                    <label for="articleAuthor">作者:</label>
+                    <input type="text" id="updateAuthor" placeholder="作者"></input>
+                    <button onclick="updateArticle()">更新文章</button>
+                </div>
+                <pre id="updateArticleResult">结果将显示在这里...</pre>
+            </div>
+
+            <!-- 删除文章 -->
+            <div class="endpoint">
+                <h3>删除文章</h3>
+                <p>测试接口: <code>DELETE /api/article/admin/delete/{id}</code></p>
+                <div class="form-group">
+                    <label for="deleteArticleId">文章ID:</label>
+                    <input type="number" id="deleteArticleId" placeholder="输入要删除的文章ID">
+                    <button onclick="deleteArticle()">删除文章</button>
+                </div>
+                <pre id="deleteArticleResult">结果将显示在这里...</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 基础配置
+        const API_BASE_URL = `http://${window.location.hostname}:8080/api/article`;
+
+        console.log(`${window.location.hostname}`,API_BASE_URL);
+
+        // 获取所有文章
+        async function getAllArticles() {
+            try {
+                document.getElementById('getAllArticlesResult').textContent = '加载中...';
+                const response = await fetch(API_BASE_URL);
+                if (!response.ok) throw new Error(`HTTP错误! 状态: ${response.status}`);
+                const data = await response.json();
+                document.getElementById('getAllArticlesResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('getAllArticlesResult').textContent = '请求失败: ' + error.message;
+            }
+        }
+
+        // 获取单个文章
+        async function getArticleById(type, articleId) {
+            if (type == 'get') {
+                articleId = document.getElementById('articleId').value;
+            } 
+
+            if (!String(articleId).trim()) {
+                alert('请输入文章ID');
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/${articleId}`);
+                if (!response.ok) throw new Error(`HTTP错误! 状态: ${response.status}`);
+                const data = await response.json();
+                if(type == 'get') {
+                    document.getElementById('getArticleResult').textContent = JSON.stringify(data, null, 2);
+                }else if(type == 'update') {
+                    document.getElementById('updateTitle').value = data.title;
+                    document.getElementById('updateContent').value = data.content;
+                    document.getElementById('updateAuthor').value = data.author;
+                    return data;
+                }
+            } catch (error) {
+                if(type == 'get') {
+                    document.getElementById('getArticleResult').textContent = '请求失败: ' + error.message;
+                }else if(type == 'update') {
+                    document.getElementById('updateArticleResult').textContent = '请求失败: ' + error.message;
+                }
+            }
+        }
+
+        // 创建文章
+        async function createArticle() {
+            const article = {
+                title: document.getElementById('createTitle').value,
+                content: document.getElementById('createContent').value,
+                author: document.getElementById('createAuthor').value,
+                // 根据您的Article实体添加其他必要字段
+            };
+
+            if (!article.title || !article.content || !article.author) {
+                alert('请填写标题、内容以及作者');
+                return;
+            }
+
+            try {
+                document.getElementById('createArticleResult').textContent = '提交中...';
+                const response = await fetch(`${API_BASE_URL}/admin/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(article)
+                });
+
+                if (!response.ok) throw new Error(`HTTP错误! 状态: ${response.status}`);
+                const data = await response.json();
+                document.getElementById('createArticleResult').textContent = JSON.stringify(data, null, 2);
+
+                // 创建成功后刷新文章列表
+                getAllArticles();
+            } catch (error) {
+                document.getElementById('createArticleResult').textContent = '请求失败: ' + error.message;
+            }
+        }
+
+        // 文章ID输入框的事件监听器
+        document.addEventListener('DOMContentLoaded', function() {          
+            document.getElementById('updateArticleId').addEventListener('input', function (e) {
+                const articleId = e.target.value.trim();
+                console.log(articleId);
+                if (articleId.length === 0) {
+                    document.getElementById('updateArticleResult').textContent = '';
+                }
+
+                clearTimeout(this.timer);
+
+                if (articleId.length > 0) {
+                    this.timer = setTimeout(() => {
+                        getArticleById('update', articleId);
+                    }, 500)
+                }
+
+            });
+
+        })
+
+        // 更新文章
+        async function updateArticle() {
+            const article = {
+                id: document.getElementById('updateArticleId').value,
+                title: document.getElementById('updateTitle').value,
+                content: document.getElementById('updateContent').value,
+                author: document.getElementById('updateAuthor').value,
+                // 根据您的Article实体添加其他必要字段
+            };
+
+            if (!article.id) {
+                alert('请输入文章ID');
+                return;
+            }
+
+            if (!article.title || !article.content || !article.author) {
+                alert('标题、内容以及作者不能为空');
+                return;
+            }
+
+            try {
+                document.getElementById('updateArticleResult').textContent = '提交中...';
+                const response = await fetch(`${API_BASE_URL}/admin/update/${article.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(article)
+                });
+
+                if (!response.ok) throw new Error(`HTTP错误! 状态: ${response.status}`);
+                const data = await response.json();
+                document.getElementById('updateArticleResult').textContent = JSON.stringify(data, null, 2);
+
+                // 更新成功后刷新文章列表
+                getAllArticles();
+            } catch (error) {
+                document.getElementById('updateArticleResult').textContent = '请求失败: ' + error.message;
+            }
+        }
+
+        // 删除文章
+        async function deleteArticle() {
+            const articleId = document.getElementById('deleteArticleId').value;
+            if (!articleId) {
+                alert('请输入文章ID');
+                return;
+            }
+
+            if (!confirm('确定要删除这篇文章吗？')) return;
+
+            try {
+                document.getElementById('deleteArticleResult').textContent = '删除中...';
+                const response = await fetch(`${API_BASE_URL}/admin/delete/${articleId}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`删除失败: ${response.status}`);
+                }
+
+                // 204响应无需解析JSON
+                document.getElementById('deleteArticleResult').textContent = '删除成功！';
+                getAllArticles(); // 刷新列表
+
+            } catch (error) {
+                document.getElementById('deleteArticleResult').textContent = '请求失败: ' + error.message;
+            }
+        }
+    </script>
+</body>
+
+</html>

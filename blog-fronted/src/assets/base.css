@@ -1,0 +1,168 @@
+/* 
+  CSS Reset & 全局样式设置
+  这个文件通常命名为 base.css 或 reset.css
+*/
+
+/* 设置根元素的字体大小，方便使用 rem 单位 */
+:root {
+  /* 定义全局 CSS 变量 */
+  --primary-color: #333333;
+  --secondary-color: #666666;
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-size-base: 16px;
+  --line-height-base: 1.5;
+  /* 设置基础字体大小为 16px */
+  font-size: 16px;
+}
+
+/* 重置所有元素的盒模型 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* 将盒模型改为更直观的 border-box */
+  margin: 0;
+  padding: 0;
+}
+
+/* 设置基础 HTML 元素样式 */
+html {
+  line-height: var(--line-height-base);
+  -webkit-text-size-adjust: 100%; /* 防止 iPhone 在横屏时改变字体大小 */
+  -webkit-tap-highlight-color: transparent; /* 移除移动端点击时的高亮 */
+}
+
+/* 设置基础 body 样式 */
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--primary-color);
+  background-color: #ffffff;
+  -webkit-font-smoothing: antialiased; /* 字体平滑 */
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility; /* 优化字体渲染 */
+}
+
+/* 移除列表样式 */
+ul,
+ol {
+  list-style: none;
+}
+
+/* 设置链接样式 */
+a {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease; /* 添加颜色过渡效果 */
+}
+
+a:hover {
+  color: #0066cc;
+}
+
+/* 设置图片基础样式 */
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+  border-style: none; /* 移除图片边框 */
+}
+
+/* 设置表单元素样式 */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit; /* 继承字体 */
+  font-size: 100%; /* 使用父元素的字体大小 */
+  line-height: 1.15;
+  margin: 0;
+}
+
+/* 设置按钮样式 */
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* 设置表格样式 */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* 设置 HTML5 元素的显示类型 */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, main, nav, section {
+  display: block;
+}
+
+/* 设置响应式断点 */
+@media screen and (max-width: 768px) {
+  :root {
+    /* 在移动端可以稍微调整基础字体大小 */
+    font-size: 14px;
+  }
+}
+
+/* 设置打印样式 */
+@media print {
+  body {
+    background-color: #fff;
+  }
+  
+  @page {
+    margin: 2cm;
+  }
+}
+
+/* 辅助类 */
+.clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* 动画相关 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccccccc8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #cccccc;
+}

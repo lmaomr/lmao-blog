@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}
+/*根据错误信息和你的 `jsconfig.json` 文件配置，问题可能是由于路径别名配置不正确或文件路径不匹配导致的。以下是一些可能的原因和解决方法：
+
+1. **路径别名问题**：
+  你的 `jsconfig.json` 文件中配置了路径别名 `@/*`，映射到 `./src/*`。确保你的项目中实际存在 `src` 文件夹，并且文件路径与别名匹配。
+
+2. **文件缺失**：
+  错误信息中提到的文件（如 `HelloWorld.vue`、`TheWelcome.vue` 等）可能已经被删除或移动。检查这些文件是否存在于 `src/components` 或其他正确的路径中。
+
+3. **缓存问题**：
+  如果文件路径和配置都正确，但仍然报错，可能是编辑器（如 VS Code）的缓存问题。尝试重启编辑器或清除缓存。
+
+4. **配置问题**：
+  确保你的 `jsconfig.json` 文件位于项目的根目录，并且配置正确。如果你的项目使用的是 TypeScript，可以考虑使用 `tsconfig.json`。
+
+5. **文件扩展名问题**：
+  确保文件扩展名（如 `.vue`）正确，并且编辑器或构建工具支持这些文件类型。
+
+### 检查步骤：
+1. 确保 `src` 文件夹存在，并包含所有需要的文件。
+2. 确保文件路径和别名配置一致。例如：
+  ```javascript
+  import HelloWorld from '@/components/HelloWorld.vue';
+  ```
+  这里的 `@/components/HelloWorld.vue` 应该映射到 `src/components/HelloWorld.vue`。
+3. 如果问题仍然存在，尝试删除 `node_modules` 文件夹并重新安装依赖：
+  ```bash
+  rm -rf node_modules
+  npm install
+  ```
+4. 重启编辑器或开发服务器。
+
+如果问题仍未解决，请提供更多上下文信息，我可以进一步帮助你排查问题。*/
