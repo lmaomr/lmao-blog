@@ -19,8 +19,8 @@ httpInstance.interceptors.request.use(config => {
 httpInstance.interceptors.response.use(res => res.data, e => {
     //统一错误提示
     ElMessage({
-        type: 'warning',
-        message: e.response.data.message
+        type: 'error',
+        message: e.response.data.message || '网络异常',
     })
     return Promise.reject(e)
 })

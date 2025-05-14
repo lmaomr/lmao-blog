@@ -79,7 +79,6 @@ export const useUserStore = defineStore('user', () => {
 
       // 验证token有效性（可选）
       const isValid = token && isTokenValid(token.value).valid;
-      console.log('token有效性', isValid);
 
       // 清理无效存储
       if (!isValid) {
