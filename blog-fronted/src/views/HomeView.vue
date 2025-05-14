@@ -1,7 +1,7 @@
 <script setup>
 import getArticles from '@/api/article.js'
 import { ref, onMounted, computed } from 'vue'
-import { useUserStore } from '@/stores/user.js'
+import { useUserStore } from '@/stores/userStore.js'
 import { debounce } from 'lodash';
 
 const articles = ref([])

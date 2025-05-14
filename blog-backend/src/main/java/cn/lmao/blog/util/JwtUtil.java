@@ -27,6 +27,8 @@ public class JwtUtil {
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", username);
+        System.out.println("当前时间: " + new Date());
+        System.out.println("token过期时间: " + new Date(System.currentTimeMillis() + expiration));
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date())

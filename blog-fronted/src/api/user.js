@@ -1,5 +1,5 @@
 import request from '@/utils/http'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 
 const login = async ({ username, password }) => {
     try {

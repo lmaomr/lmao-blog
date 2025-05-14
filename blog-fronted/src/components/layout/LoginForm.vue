@@ -2,7 +2,7 @@
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import request from '@/api/article'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 import { useRouter, useRoute } from 'vue-router'
 
 

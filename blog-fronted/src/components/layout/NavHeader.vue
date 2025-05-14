@@ -3,11 +3,11 @@ import { ref, onMounted, watch, reactive, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import login from '@/api/user'
 import { ElMessage } from 'element-plus'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 
 const userStore = useUserStore()
 const router = useRouter()
-const route = useRoute()
+// const route = useRoute()
 const loginDialogVisible = ref(false)
 const loginFormRef = ref(null)
 const registerDialogVisible = ref(false)
@@ -118,7 +118,7 @@ const handleLogin = async () => {
     await loginFormRef.value.validate();
     // 2. 发送登录请求
     const { username, password } = loginForm;
-    const response = await login({ username, password });
+    await login({ username, password });
 
     // 3. 登录成功处理
     ElMessage.success('登录成功');

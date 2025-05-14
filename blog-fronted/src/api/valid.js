@@ -1,42 +1,16 @@
-import request from '@/utils/http';
-
 /**
- * 本地校验 Token 是否过期
+ * 仅本地验证 Token 是否过期（不主动请求后端）
  * @returns { valid: boolean, reason?: string }
  */
-const validateToken = (token) => {
-    if (!token) return { valid: false, reason: "No token provided" };
+export function isTokenValid(token) {
+    if (!token) return { valid: false, reason: "没有提供Token！" };
     try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const isExpired = Date.now() >= payload.exp * 1000;
+        const isExpired = Date.now() >= JSON.parse(atob(token.split('.')[1])).exp * 1000;
         return { 
             valid: !isExpired,
-            reason: isExpired ? "Token expired" : "Valid (local check)"
+            reason: isExpired ? "Token已过期！" : "Token有效！(本地检查)"
         };
     } catch (e) {
         return { valid: false, reason: "Invalid token format" };
-    }
-}
-
-/**
- * 综合验证 Token（前端 + 后端）
- * @returns { valid: boolean, reason?: string }
- */
-export async function isTokenValid(token) {
-    // 1. 检查本地是否有效
-    const localCheck = validateToken(token);
-    if (!localCheck.valid) return localCheck;
-    console.log(token)
-    // 2. 请求后端严格验证
-    try {
-        const response = await request('/auth/validate', {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        return response.data; // 假设后端返回 { valid, reason }
-    } catch (error) {
-        return { 
-            valid: false, 
-            reason: error.response?.data?.reason || "Network error" 
-        };
     }
 }

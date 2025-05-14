@@ -69,22 +69,21 @@ export const useUserStore = defineStore('user', () => {
   // 检查登录状态
   function checkLoginStatus() {
     try {
-      token.value = localStorage.getItem('token');
+      // 1. 从 localStorage 读取 token 和 userInfo
+      const storedToken = localStorage.getItem('token');
+      const storedUserInfo = localStorage.getItem('userInfo');
 
-      userInfo.value = localStorage.getItem('userInfo')
-        ? JSON.parse(localStorage.getItem('userInfo'))
-        : getDefaultUserInfo(); // ✅ 正确解析
+      // 2. 更新响应式数据
+      token.value = storedToken;
+      userInfo.value = storedUserInfo ? JSON.parse(storedUserInfo) : getDefaultUserInfo();
 
       // 验证token有效性（可选）
-      const isValid = token && isTokenValid(token.value);
-
-      // 同步状态
-      token.value = isValid ? token : null
+      const isValid = token && isTokenValid(token.value).valid;
+      console.log('token有效性', isValid);
 
       // 清理无效存储
       if (!isValid) {
-        localStorage.removeItem('token')
-        localStorage.setItem('userInfo', JSON.stringify(getDefaultUserInfo()))
+        logout(); // 直接调用 logout 清理状态
       }
     } catch (error) {
       console.error('登录状态检查失败:', error);

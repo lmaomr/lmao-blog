@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,6 +41,7 @@ router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
   // 判断该路由是否需要登录权限
   if (to.matched.some(record => record.meta.requiresAuth)) {
+    userStore.checkLoginStatus()
     if (!isLoggedIn) {
       // 未登录，显示提示消息
       ElMessage({
@@ -55,7 +56,7 @@ router.beforeEach((to, from, next) => {
       // 触发登录事件
       window.dispatchEvent(new CustomEvent('show-login-dialog'))
       // 停留在当前页面
-      next(false)
+      next(from.path)
     } else {
       next() // 已登录，正常访问
     }
