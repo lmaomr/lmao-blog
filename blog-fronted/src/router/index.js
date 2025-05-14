@@ -36,12 +36,12 @@ import { ElMessage } from 'element-plus'
 
 // 全局前置守卫
 router.beforeEach((to, from, next) => {
-  // 获取登录状态
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
   const userStore = useUserStore()
   // 判断该路由是否需要登录权限
   if (to.matched.some(record => record.meta.requiresAuth)) {
     userStore.checkLoginStatus()
+    // 获取登录状态
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
     if (!isLoggedIn) {
       // 未登录，显示提示消息
       ElMessage({

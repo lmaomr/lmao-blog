@@ -102,4 +102,4 @@ spring:
 # JWT配置
 jwt:
   secret: LmaoBlog2024@#$%^&*()_+SecretKey123456789
-  expiration: 60000  # 24小时
+  expiration: 14400000  # 24小时
