@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文章管理接口测试</title>
+    <title>接口测试</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -173,13 +173,58 @@
                 <pre id="deleteArticleResult">结果将显示在这里...</pre>
             </div>
         </div>
+
+        <!-- 在<body>标签内，添加到其他接口测试部分之后 -->
+        <div class="endpoint">
+            <h2>文件上传测试</h2>
+            <p>测试接口: <code>POST /api/files</code> (multipart/form-data)</p>
+            <div class="form-group">
+                <label for="fileToUpload">选择文件:</label>
+                <input type="file" id="fileToUpload">
+                <label for="userId">用户ID:</label>
+                <input type="number" id="userId" placeholder="输入用户ID" value="1">
+                <button onclick="uploadFile()">上传文件</button>
+            </div>
+            <pre id="uploadFileResult">结果将显示在这里...</pre>
+        </div>
+
+        <!-- 文件下载测试 -->
+        <div class="endpoint">
+            <h2>文件下载测试</h2>
+            <p>测试接口: <code>GET /api/files/download/{fileId}</code></p>
+            <div class="form-group">
+                <label for="downloadFileId">文件ID:</label>
+                <input type="number" id="downloadFileId" placeholder="输入文件ID">
+                <label for="downloadUserId">用户ID:</label>
+                <input type="number" id="downloadUserId" placeholder="输入用户ID" value="1">
+                <button onclick="downloadFile()">下载文件</button>
+            </div>
+            <pre id="downloadFileResult">结果将显示在这里...</pre>
+        </div>
+
+        <!-- 文件列表测试 -->
+        <div class="endpoint">
+            <h2>文件列表测试</h2>
+            <p>测试接口: <code>GET /api/files</code></p>
+            <div class="form-group">
+                <label for="listUserId">用户ID:</label>
+                <input type="number" id="listUserId" placeholder="输入用户ID" value="1">
+                <label for="listPage">页码:</label>
+                <input type="number" id="listPage" placeholder="页码(从0开始)" value="0">
+                <label for="listSize">每页大小:</label>
+                <input type="number" id="listSize" placeholder="每页数量" value="10">
+                <button onclick="getFileList()">获取文件列表</button>
+            </div>
+            <pre id="fileListResult">结果将显示在这里...</pre>
+        </div>
     </div>
+
 
     <script>
         // 基础配置
         const API_BASE_URL = `http://${window.location.hostname}:8080/api/article`;
 
-        console.log(`${window.location.hostname}`,API_BASE_URL);
+        console.log(`${window.location.hostname}`, API_BASE_URL);
 
         // 获取所有文章
         async function getAllArticles() {
@@ -198,7 +243,7 @@
         async function getArticleById(type, articleId) {
             if (type == 'get') {
                 articleId = document.getElementById('articleId').value;
-            } 
+            }
 
             if (!String(articleId).trim()) {
                 alert('请输入文章ID');
@@ -208,18 +253,18 @@
                 const response = await fetch(`${API_BASE_URL}/${articleId}`);
                 if (!response.ok) throw new Error(`HTTP错误! 状态: ${response.status}`);
                 const data = await response.json();
-                if(type == 'get') {
+                if (type == 'get') {
                     document.getElementById('getArticleResult').textContent = JSON.stringify(data, null, 2);
-                }else if(type == 'update') {
+                } else if (type == 'update') {
                     document.getElementById('updateTitle').value = data.title;
                     document.getElementById('updateContent').value = data.content;
                     document.getElementById('updateAuthor').value = data.author;
                     return data;
                 }
             } catch (error) {
-                if(type == 'get') {
+                if (type == 'get') {
                     document.getElementById('getArticleResult').textContent = '请求失败: ' + error.message;
-                }else if(type == 'update') {
+                } else if (type == 'update') {
                     document.getElementById('updateArticleResult').textContent = '请求失败: ' + error.message;
                 }
             }
@@ -261,7 +306,7 @@
         }
 
         // 文章ID输入框的事件监听器
-        document.addEventListener('DOMContentLoaded', function() {          
+        document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('updateArticleId').addEventListener('input', function (e) {
                 const articleId = e.target.value.trim();
                 console.log(articleId);
@@ -348,6 +393,135 @@
 
             } catch (error) {
                 document.getElementById('deleteArticleResult').textContent = '请求失败: ' + error.message;
+            }
+        }
+
+        // 在<script>标签内添加以下函数
+
+        // 文件上传函数
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileToUpload');
+            const userId = document.getElementById('userId').value;
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('请选择要上传的文件');
+                return;
+            }
+
+            if (!userId) {
+                alert('请输入用户ID');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                document.getElementById('uploadFileResult').textContent = '上传中...';
+                const response = await fetch(`/api/files`, {
+                    method: 'POST',
+                    headers: {
+                        'X-User-Id': userId
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`上传失败: ${response.status}`);
+                }
+
+                const result = await response.json();
+                document.getElementById('uploadFileResult').textContent = JSON.stringify(result, null, 2);
+
+                // 上传成功后刷新文件列表
+                getFileList();
+            } catch (error) {
+                document.getElementById('uploadFileResult').textContent = '上传失败: ' + error.message;
+            }
+        }
+
+        // 文件下载函数
+        async function downloadFile() {
+            const fileId = document.getElementById('downloadFileId').value;
+            const userId = document.getElementById('downloadUserId').value;
+
+            if (!fileId) {
+                alert('请输入文件ID');
+                return;
+            }
+
+            if (!userId) {
+                alert('请输入用户ID');
+                return;
+            }
+
+            try {
+                document.getElementById('downloadFileResult').textContent = '准备下载...';
+                const response = await fetch(`/api/files/download/${fileId}`, {
+                    headers: {
+                        'X-User-Id': userId
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`下载失败: ${response.status}`);
+                }
+
+                // 创建下载链接
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+
+                // 从Content-Disposition头获取文件名
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let fileName = 'downloaded_file';
+                if (contentDisposition) {
+                    const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+                    if (fileNameMatch && fileNameMatch.length === 2) {
+                        fileName = fileNameMatch[1];
+                    }
+                }
+
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                document.getElementById('downloadFileResult').textContent = '下载成功！';
+            } catch (error) {
+                document.getElementById('downloadFileResult').textContent = '下载失败: ' + error.message;
+            }
+        }
+
+        // 获取文件列表函数
+        async function getFileList() {
+            const userId = document.getElementById('listUserId').value;
+            const page = document.getElementById('listPage').value || 0;
+            const size = document.getElementById('listSize').value || 10;
+
+            if (!userId) {
+                alert('请输入用户ID');
+                return;
+            }
+
+            try {
+                document.getElementById('fileListResult').textContent = '加载中...';
+                const response = await fetch(`/api/files?page=${page}&size=${size}`, {
+                    headers: {
+                        'X-User-Id': userId
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`获取列表失败: ${response.status}`);
+                }
+
+                const result = await response.json();
+                document.getElementById('fileListResult').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('fileListResult').textContent = '获取列表失败: ' + error.message;
             }
         }
     </script>

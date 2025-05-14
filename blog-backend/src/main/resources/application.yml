@@ -103,3 +103,8 @@ spring:
 jwt:
   secret: LmaoBlog2024@#$%^&*()_+SecretKey123456789
   expiration: 14400000  # 24小时
+
+file:
+  upload:
+    # 上传文件存储路径（生产环境必须使用环境变量或配置中心）
+    path: D:\Home\LmaoBlog\Uploads

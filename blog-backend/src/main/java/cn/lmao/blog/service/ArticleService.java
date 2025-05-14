@@ -4,7 +4,7 @@ package cn.lmao.blog.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.lmao.blog.dto.ArticleDTO;
+import cn.lmao.blog.model.dto.ArticleDTO;
 import cn.lmao.blog.model.entity.Article;
 import cn.lmao.blog.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;

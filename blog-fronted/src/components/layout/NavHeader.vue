@@ -137,7 +137,6 @@ const handleLogin = async () => {
     } else {
       // 网络请求错误
       const errorMsg = error.response?.data?.message || '登录失败，请重试';
-      ElMessage.error(errorMsg);
     }
   }
 };

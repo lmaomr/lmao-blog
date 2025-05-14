@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import cn.lmao.blog.dto.ArticleDTO;
+import cn.lmao.blog.model.dto.ArticleDTO;
 import cn.lmao.blog.model.entity.Article;
 import cn.lmao.blog.service.ArticleService;
 import cn.lmao.blog.service.TagService;

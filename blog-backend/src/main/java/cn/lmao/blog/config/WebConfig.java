@@ -17,6 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**")  // 拦截所有请求
                 .excludePathPatterns(    // 排除不需要验证的路径
+                    "/APICheck.html",       // 用户相关接口
                     "/api/article/**",   // 登录接口
                     "/api/user/login",   // 登录接口
                     "/api/user/register", // 注册接口

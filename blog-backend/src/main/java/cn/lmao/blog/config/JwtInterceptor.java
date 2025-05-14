@@ -30,16 +30,16 @@ public class JwtInterceptor implements HandlerInterceptor {
         String token = request.getHeader("Authorization");
         
         // 如果请求头中没有 token，返回未授权错误
-        if (token == null || token.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        }
+        // if (token == null || token.isEmpty()) {
+        //     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        //     return false;
+        // }
         
-        // 验证 token
-        if (!jwtUtil.validateToken(token)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
-        }
+        // // 验证 token
+        // if (!jwtUtil.validateToken(token)) {
+        //     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        //     return false;
+        // }
         
         return true;
     }
