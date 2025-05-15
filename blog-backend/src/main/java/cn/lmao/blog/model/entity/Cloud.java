@@ -11,10 +11,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "cloud")
 public class Cloud {
@@ -36,7 +38,8 @@ public class Cloud {
     //文件分类
     private String fileType;
 
-    @OneToMany(mappedBy = "cloud")    
+    @OneToMany(mappedBy = "cloud")
+    @JsonManagedReference // 防止序列化递归
     private List<File> files = new ArrayList<>();
 
 }

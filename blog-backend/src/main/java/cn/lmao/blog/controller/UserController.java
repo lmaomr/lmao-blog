@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import cn.lmao.blog.service.UserService;
+import cn.lmao.blog.model.dto.UserDTO;
 import cn.lmao.blog.model.entity.User;  
 import cn.lmao.blog.util.JwtUtil;
 
@@ -37,7 +38,7 @@ public class UserController {
         };
         response.put("code", 200);
         response.put("message", "登录成功");
-        response.put("data", user);
+        response.put("data", new UserDTO(user));
         response.put("token", jwtUtil.generateToken(user.getUsername()));
         System.out.println(response);
         return ResponseEntity.ok(response);

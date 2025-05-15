@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import getUserCloud from '@/api/cloud.js'
 
 // 状态管理
 const searchQuery = ref('')
@@ -167,10 +168,20 @@ const showContextMenu = (event, file) => {
 
 // 生命周期
 onMounted(() => {
+  getUserCloud()
+    .then(res => {
+      // 处理获取的云盘数据
+      console.log('云盘数据:', res)
+      // 这里可以更新文件列表等
+    })
+    .catch(err => {
+      console.error('获取云盘数据失败:', err)
+    })
   // 模拟加载数据
   setTimeout(() => {
     loading.value = false
   }, 800)
+
 })
 </script>
 

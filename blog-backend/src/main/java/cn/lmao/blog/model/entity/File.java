@@ -5,10 +5,13 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "file")
 public class File {
@@ -31,8 +34,6 @@ public class File {
     @Column(nullable = false, length = 64)
     private String fileHash; // 文件哈希值(SHA-256)
 
-    private String fileCategory; // 文件分类（用户自定义）
-
     @Column(columnDefinition = "datetime(0)", name = "create_time", nullable = false, updatable = false)
     private LocalDateTime createTime;
 
@@ -41,6 +42,7 @@ public class File {
 
     @ManyToOne(fetch = FetchType.LAZY) // 添加延迟加载
     @JoinColumn(name = "cloud_id", nullable = false)
+    @JsonBackReference // 防止序列化递归
     private Cloud cloud;
 
     // 新增文件状态标识
@@ -67,5 +69,20 @@ public class File {
         ACTIVE,    // 活跃可用
         DELETED,   // 已删除
         ARCHIVED   // 已归档
+    }
+
+    public File() {
+        // 默认构造函数
+    }
+
+    public File(File file) {
+        this.fileName = file.getFileName();
+        this.fileSize = file.getFileSize();
+        this.fileType = file.getFileType();
+        this.fileUrl = file.getFileUrl();
+        this.fileHash = file.getFileHash();
+        this.createTime = file.getCreateTime();
+        this.updateTime = file.getUpdateTime();
+        this.status = file.getStatus();
     }
 }

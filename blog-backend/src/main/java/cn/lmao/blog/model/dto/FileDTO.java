@@ -16,7 +16,6 @@ public class FileDTO {
     private String fileType;
     private String fileUrl;
     private String fileHash;
-    private String fileCategory;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
     private String status;
@@ -31,7 +30,6 @@ public class FileDTO {
         this.fileType = file.getFileType();
         this.fileUrl = file.getFileUrl();
         this.fileHash = file.getFileHash();
-        this.fileCategory = file.getFileCategory();
         this.createTime = file.getCreateTime();
         this.updateTime = file.getUpdateTime();
         this.status = file.getStatus().name();

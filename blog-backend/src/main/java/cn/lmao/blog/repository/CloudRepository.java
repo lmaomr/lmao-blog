@@ -20,4 +20,5 @@ public interface CloudRepository extends JpaRepository<Cloud, Long> {
     @Transactional
     @Query("UPDATE Cloud c SET c.usedCapacity = :usedCapacity WHERE c.id = :cloudId")
     void updateUsedSpace(@Param("cloudId") Long cloudId, @Param("usedCapacity") Long usedCapacity);
+    
 }

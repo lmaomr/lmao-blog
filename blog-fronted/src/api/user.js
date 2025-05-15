@@ -8,11 +8,10 @@ const login = async ({ username, password }) => {
             method: 'POST',
             headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
             data: {
-                username: username,
-                password: password
+                username,
+                password
             }
         })
 
