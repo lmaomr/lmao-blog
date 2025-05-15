@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import getUserCloud from '@/api/cloud.js'
+import { getUserCloud } from '@/api/cloud.js'
+import  { uploadFile } from '@/api/cloud.js'
+import { ElMessage } from 'element-plus'
 
 // 状态管理
 const searchQuery = ref('')
@@ -61,9 +63,16 @@ const filteredFiles = computed(() => {
 
 // 方法
 const handleFileChange = (file) => {
-  // 处理文件上传
-  console.log('上传文件:', file)
-  // 这里添加上传逻辑
+  // 调用上传API
+  uploadFile(file)
+    .then(res => {
+      ElMessage.success('上传成功')
+      // 刷新文件列表
+      // refreshFileList()
+    })
+    .catch(err => {
+      ElMessage.error(`上传失败: ${err.message}`)
+    })
 }
 
 const createFolder = () => {

@@ -1,5 +1,6 @@
 package cn.lmao.blog.service;
 
+import cn.lmao.blog.exception.ResourceNotFoundException;
 import cn.lmao.blog.model.entity.User;
 import cn.lmao.blog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,12 @@ public class UserService {
         return userRepository.findByUsernameAndPassword(username, password);
     }
     
-    
+    public long getUserIdByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFoundException("用户不存在");
+        }
+        return user.getId();
+    }
 }
 
