@@ -22,11 +22,11 @@ public class FileUploadResponse {
     // 添加接收 File 实体的构造函数
     public FileUploadResponse(File file) {
         this.fileId = file.getId().toString();
-        this.originalName = file.getFileName();
-        this.storedName = file.getFileUrl(); // 假设这是存储路径
+        this.originalName = file.getName();
+        this.storedName = file.getUrl(); // 假设这是存储路径
         this.fileUrl = "/api/files/" + file.getId(); // 示例访问URL
-        this.size = file.getFileSize();
-        this.fileType = file.getFileType();
+        this.size = file.getSize();
+        this.fileType = file.getType();
         this.uploadTime = file.getCreateTime();
         this.success = true;
         this.message = "文件上传成功";

@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @Data
 public class FileDTO {
     private Long id;
-    private String fileName;
-    private long fileSize;
-    private String fileType;
-    private String fileUrl;
-    private String fileHash;
+    private String name;
+    private long size;
+    private String type;
+    private String url;
+    private String hash;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
     private String status;
@@ -25,11 +25,11 @@ public class FileDTO {
     // 从File实体转换的构造方法
     public FileDTO(File file) {
         this.id = file.getId();
-        this.fileName = file.getFileName();
-        this.fileSize = file.getFileSize();
-        this.fileType = file.getFileType();
-        this.fileUrl = file.getFileUrl();
-        this.fileHash = file.getFileHash();
+        this.name = file.getName();
+        this.size = file.getSize();
+        this.type = file.getType();
+        this.url = file.getUrl();
+        this.hash = file.getHash();
         this.createTime = file.getCreateTime();
         this.updateTime = file.getUpdateTime();
         this.status = file.getStatus().name();

@@ -13,6 +13,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Getter
@@ -27,6 +29,7 @@ public class Cloud {
 
     @OneToOne
     @JoinColumn(name = "user_id") 
+    @JsonBackReference // 防止序列化递归
     private User user;
 
     //总容量

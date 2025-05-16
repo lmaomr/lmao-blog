@@ -1,8 +1,15 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { getUserCloud } from '@/api/cloud.js'
-import  { uploadFile } from '@/api/cloud.js'
+import { getUserCloud, uploadFile } from '@/api/cloud.js'
 import { ElMessage } from 'element-plus'
+import {
+  Folder,
+  Picture,
+  Document,
+  VideoPlay,
+  Headset,
+  Files
+} from '@element-plus/icons-vue'
 
 // 状态管理
 const searchQuery = ref('')
@@ -14,9 +21,9 @@ const newFolder = ref({ name: '' })
 const selectedCategory = ref(null)
 
 // 模拟数据
-const usedStorage = ref('2.5 GB')
-const totalStorage = ref('10 GB')
-const storagePercentage = ref(25)
+const usedStorage = ref(0)
+const totalStorage = ref(0)
+const storagePercentage = ref(0)
 
 const categories = ref([
   { id: 'all', name: '全部文件', icon: 'Files', count: 42 },
@@ -27,20 +34,7 @@ const categories = ref([
   { id: 'other', name: '其他', icon: 'MoreFilled', count: 6 }
 ])
 
-const files = ref([
-  { id: 1, name: '工作文档', type: 'folder', size: 0, lastModified: '2023-06-10', category: 'document' },
-  { id: 2, name: '旅行照片', type: 'folder', size: 0, lastModified: '2023-05-22', category: 'image' },
-  { id: 3, name: '项目计划.docx', type: 'file', size: 1024 * 1024 * 2.3, lastModified: '2023-06-12', category: 'document' },
-  { id: 4, name: '会议记录.pdf', type: 'file', size: 1024 * 1024 * 1.7, lastModified: '2023-06-11', category: 'document' },
-  { id: 5, name: '海边日落.jpg', type: 'file', size: 1024 * 1024 * 3.5, lastModified: '2023-06-09', category: 'image' },
-  { id: 6, name: '产品演示.mp4', type: 'file', size: 1024 * 1024 * 28.5, lastModified: '2023-06-05', category: 'video' },
-  { id: 7, name: '背景音乐.mp3', type: 'file', size: 1024 * 1024 * 4.2, lastModified: '2023-06-03', category: 'audio' },
-  { id: 8, name: '数据分析.xlsx', type: 'file', size: 1024 * 1024 * 1.2, lastModified: '2023-06-01', category: 'document' },
-  { id: 9, name: '公司Logo.png', type: 'file', size: 1024 * 512, lastModified: '2023-05-28', category: 'image' },
-  { id: 10, name: '客户反馈.txt', type: 'file', size: 1024 * 10, lastModified: '2023-05-25', category: 'document' },
-  { id: 11, name: '产品设计图.sketch', type: 'file', size: 1024 * 1024 * 8.1, lastModified: '2023-05-20', category: 'other' },
-  { id: 12, name: '系统备份.zip', type: 'file', size: 1024 * 1024 * 42, lastModified: '2023-05-15', category: 'other' }
-])
+const files = ref([])
 
 // 计算属性
 const filteredFiles = computed(() => {
@@ -86,7 +80,7 @@ const confirmCreateFolder = () => {
       name: newFolder.value.name,
       type: 'folder',
       size: 0,
-      lastModified: new Date().toISOString().split('T')[0],
+      updateTime: new Date().toISOString().split('T')[0],
       category: 'document'
     }
     files.value.unshift(folder)
@@ -120,7 +114,7 @@ const sortBy = (criteria) => {
       files.value.sort((a, b) => a.name.localeCompare(b.name))
       break
     case 'date':
-      files.value.sort((a, b) => new Date(b.lastModified) - new Date(a.lastModified))
+      files.value.sort((a, b) => new Date(b.updateTime) - new Date(a.updateTime))
       break
     case 'size':
       files.value.sort((a, b) => b.size - a.size)
@@ -154,20 +148,36 @@ const formatDate = (date) => {
   return date
 }
 
-const isImage = (filename) => {
-  return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(filename)
+const getFileType = (filename) => {
+  const patterns = {
+    image: /\.(jpg|jpeg|png|gif|bmp|webp)$/i,
+    document: /\.(doc|docx|pdf|txt|xls|xlsx|ppt|pptx)$/i,
+    video: /\.(mp4|avi|mov|wmv|flv|mkv)$/i,
+    audio: /\.(mp3|wav|ogg|flac|aac)$/i
+  };
+
+  for (const type in patterns) {
+    if (patterns[type].test(filename)) {
+      return type;
+    }
+  }
+
+  return 'unknown';
+};
+
+const fileIconMap = {
+  folder: Folder,
+  image: Picture,
+  document: Document,
+  video: VideoPlay,
+  audio: Headset,
+  unknown: Files
 }
 
-const isDocument = (filename) => {
-  return /\.(doc|docx|pdf|txt|xls|xlsx|ppt|pptx)$/i.test(filename)
-}
-
-const isVideo = (filename) => {
-  return /\.(mp4|avi|mov|wmv|flv|mkv)$/i.test(filename)
-}
-
-const isAudio = (filename) => {
-  return /\.(mp3|wav|ogg|flac|aac)$/i.test(filename)
+const getFileIconComponent = (file) => {
+  return file.type === 'folder'
+    ? fileIconMap.folder
+    : fileIconMap[getFileType(file.name)] || fileIconMap.unknown
 }
 
 const showContextMenu = (event, file) => {
@@ -180,7 +190,12 @@ onMounted(() => {
   getUserCloud()
     .then(res => {
       // 处理获取的云盘数据
-      console.log('云盘数据:', res)
+      usedStorage.value = formatSize(res.data.usedCapacity)
+      totalStorage.value = formatSize(res.data.totalCapacity)
+      storagePercentage.value = Math.round((res.data.usedCapacity / res.data.totalCapacity) * 1000) / 10
+      // 处理文件列表
+      files.value = res.data.files || []
+      console.log('云盘文件列表:', files.value)
       // 这里可以更新文件列表等
     })
     .catch(err => {
@@ -291,30 +306,15 @@ onMounted(() => {
           <div v-for="file in filteredFiles" :key="file.id" class="file-item" @click="handleFileClick(file)"
             @contextmenu.prevent="showContextMenu($event, file)">
             <div class="file-icon">
-              <el-icon v-if="file.type === 'folder'">
-                <Folder />
-              </el-icon>
-              <el-icon v-else-if="isImage(file.name)">
-                <Picture />
-              </el-icon>
-              <el-icon v-else-if="isDocument(file.name)">
-                <Document />
-              </el-icon>
-              <el-icon v-else-if="isVideo(file.name)">
-                <VideoPlay />
-              </el-icon>
-              <el-icon v-else-if="isAudio(file.name)">
-                <Headset />
-              </el-icon>
-              <el-icon v-else>
-                <Files />
+              <el-icon>
+                <component :is="getFileIconComponent(file)" />
               </el-icon>
             </div>
             <div class="file-details">
               <div class="file-name">{{ file.name }}</div>
               <div v-if="viewType === 'list'" class="file-meta">
                 <span>{{ formatSize(file.size) }}</span>
-                <span>{{ formatDate(file.lastModified) }}</span>
+                <span>{{ formatDate(file.updateTime) }}</span>
               </div>
             </div>
             <div class="file-actions" v-if="viewType === 'list'">
@@ -523,6 +523,7 @@ onMounted(() => {
   border-radius: 8px;
   transition: all 0.2s;
   text-align: center;
+  height: 8rem;
 }
 
 .grid-view .file-item:hover {

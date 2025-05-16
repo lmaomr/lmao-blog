@@ -19,20 +19,21 @@ public class File {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String fileName; // 文件名称
+    @Column(name = "file_name", nullable = false)
+    private String name; // 文件名称
 
     @ColumnDefault("0") // 使用Hibernate的默认值注解
-    @Column(nullable = false)
-    private long fileSize = 10; // 文件大小，单位字节
+    @Column(name= "file_size", nullable = false)
+    private long size; // 文件大小，单位字节
 
-    private String fileType; // 文件类型（扩展名）
+    @Column(name= "file_type")
+    private String type; // 文件类型（扩展名）
     
-    @Column(nullable = false)
-    private String fileUrl; // 文件访问地址
+    @Column(name= "file_url", nullable = false)
+    private String url; // 文件访问地址
 
-    @Column(nullable = false, length = 64)
-    private String fileHash; // 文件哈希值(SHA-256)
+    @Column(name= "file_hash", nullable = false, length = 64)
+    private String hash; // 文件哈希值(SHA-256)
 
     @Column(columnDefinition = "datetime(0)", name = "create_time", nullable = false, updatable = false)
     private LocalDateTime createTime;
@@ -76,11 +77,11 @@ public class File {
     }
 
     public File(File file) {
-        this.fileName = file.getFileName();
-        this.fileSize = file.getFileSize();
-        this.fileType = file.getFileType();
-        this.fileUrl = file.getFileUrl();
-        this.fileHash = file.getFileHash();
+        this.name = file.getName();
+        this.size = file.getSize();
+        this.type = file.getType();
+        this.name = file.getName();
+        this.hash = file.getHash();
         this.createTime = file.getCreateTime();
         this.updateTime = file.getUpdateTime();
         this.status = file.getStatus();
