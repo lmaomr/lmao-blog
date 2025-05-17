@@ -28,17 +28,17 @@ public class Cloud {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id") 
+    @JoinColumn(name = "user_id")
     @JsonBackReference // 防止序列化递归
     private User user;
 
-    //总容量
+    // 总容量
     private long totalCapacity;
 
-    //已使用容量
+    // 已使用容量
     private long usedCapacity;
 
-    //文件分类
+    // 文件分类
     private String fileType;
 
     @OneToMany(mappedBy = "cloud")

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { getUserCloud, uploadFile } from '@/api/cloud.js'
 import { ElMessage } from 'element-plus'
 import {
@@ -25,14 +25,7 @@ const usedStorage = ref(0)
 const totalStorage = ref(0)
 const storagePercentage = ref(0)
 
-const categories = ref([
-  { id: 'all', name: '全部文件', icon: 'Files', count: 42 },
-  { id: 'image', name: '图片', icon: 'Picture', count: 16 },
-  { id: 'document', name: '文档', icon: 'Document', count: 12 },
-  { id: 'video', name: '视频', icon: 'VideoPlay', count: 5 },
-  { id: 'audio', name: '音频', icon: 'Headset', count: 3 },
-  { id: 'other', name: '其他', icon: 'MoreFilled', count: 6 }
-])
+const categories = ref([])
 
 const files = ref([])
 
@@ -55,14 +48,36 @@ const filteredFiles = computed(() => {
   return result
 })
 
-// 方法
+const initCloud = () => {
+  getUserCloud()
+    .then(res => {
+      // 处理获取的云盘数据
+      usedStorage.value = formatSize(res.data.usedCapacity)
+      totalStorage.value = formatSize(res.data.totalCapacity)
+      storagePercentage.value = Math.round((res.data.usedCapacity / res.data.totalCapacity) * 1000) / 10
+      // 处理文件列表
+      files.value = res.data.files || []
+      categories.value = res.data.categories || []
+      console.log('云盘文件列表:', res.data)
+      // 这里可以更新文件列表等
+      loading.value = false; // 隐藏加载状态
+    })
+    .catch(err => {
+      console.error('获取云盘数据失败:', err)
+    })
+}
+
+// 文件上传方法
 const handleFileChange = (file) => {
   // 调用上传API
   uploadFile(file)
     .then(res => {
-      ElMessage.success('上传成功')
-      // 刷新文件列表
-      // refreshFileList()
+      console.log('上传成功:', res)
+      ElMessage({
+        message: res.message,
+        type: 'res.success == true' ? 'success' : 'error',
+      })
+      initCloud() // 重新获取文件列表
     })
     .catch(err => {
       ElMessage.error(`上传失败: ${err.message}`)
@@ -162,8 +177,22 @@ const getFileType = (filename) => {
     }
   }
 
-  return 'unknown';
+  return 'other';
 };
+
+// 统一更新分类计数
+const updateCategoryCounts = () => {
+  categories.value.forEach(cat => cat.count = 0);
+  files.value.forEach(file => {
+    categories.value[0].count++;
+    const type = getFileType(file.name);
+    const category = categories.value.find(cat => cat.id === type);
+    if (category) category.count++;
+  });
+};
+
+// 在文件列表变化时调用
+watch(files, updateCategoryCounts, { deep: true });
 
 const fileIconMap = {
   folder: Folder,
@@ -187,25 +216,8 @@ const showContextMenu = (event, file) => {
 
 // 生命周期
 onMounted(() => {
-  getUserCloud()
-    .then(res => {
-      // 处理获取的云盘数据
-      usedStorage.value = formatSize(res.data.usedCapacity)
-      totalStorage.value = formatSize(res.data.totalCapacity)
-      storagePercentage.value = Math.round((res.data.usedCapacity / res.data.totalCapacity) * 1000) / 10
-      // 处理文件列表
-      files.value = res.data.files || []
-      console.log('云盘文件列表:', files.value)
-      // 这里可以更新文件列表等
-    })
-    .catch(err => {
-      console.error('获取云盘数据失败:', err)
-    })
-  // 模拟加载数据
-  setTimeout(() => {
-    loading.value = false
-  }, 800)
-
+  initCloud()
+  // 初始化分类计数
 })
 </script>
 

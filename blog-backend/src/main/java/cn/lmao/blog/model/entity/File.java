@@ -82,6 +82,7 @@ public class File {
         this.type = file.getType();
         this.name = file.getName();
         this.hash = file.getHash();
+        this.url = file.getUrl();
         this.createTime = file.getCreateTime();
         this.updateTime = file.getUpdateTime();
         this.status = file.getStatus();
