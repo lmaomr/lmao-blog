@@ -37,7 +37,7 @@
   text-align: center;
   /* 字体设置 */
   font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; /* 中文字体 */
-  font-size: 0.875rem; /* 基础字体大小 */
+  font-size: 1.5rem; /* 基础字体大小 */
   font-weight: 400; /* 字体粗细 */
   letter-spacing: 0.01em; /* 字间距 */
   line-height: 1.5; /* 行高 */

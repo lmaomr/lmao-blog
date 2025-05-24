@@ -35,6 +35,9 @@ public class User {
     @Column(name = "email", length = 20, nullable = false)
     private String email;
 
+    @Column(name = "nickname", length = 20)
+    private String nickname;
+
     @Column(name = "avatar_url")
     private String avatarUrl;
 

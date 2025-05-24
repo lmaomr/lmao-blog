@@ -12,7 +12,7 @@
   --font-size-base: 16px;
   --line-height-base: 1.5;
   /* 设置基础字体大小为 16px */
-  font-size: 16px;
+  font-size: 10px;
 }
 
 /* 重置所有元素的盒模型 */

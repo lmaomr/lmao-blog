@@ -1,6 +1,5 @@
 import axios from "axios";
 import { ElMessage } from 'element-plus'  // 导入Element Plus的消息提示组件
-import { useUserStore } from '@/stores/userStore'  // 导入用户状态管理的store
 
 const httpInstance = axios.create({
     // 设置基础URL，这样后面写请求的时候可以省略这部分

@@ -306,58 +306,13 @@ onMounted(() => {
           </el-dropdown>
         </div>
 
-        <div v-if="loading" class="loading-container">
+        <div v-if="true" class="loading-container">
           <el-skeleton :rows="8" animated />
         </div>
 
-        <div v-else-if="filteredFiles.length === 0" class="empty-state">
-          <el-empty description="暂无文件" />
-        </div>
-
-        <div v-else :class="['files-list', viewType === 'grid' ? 'grid-view' : 'list-view']">
-          <div v-for="file in filteredFiles" :key="file.id" class="file-item" @click="handleFileClick(file)"
-            @contextmenu.prevent="showContextMenu($event, file)">
-            <div class="file-icon">
-              <el-icon>
-                <component :is="getFileIconComponent(file)" />
-              </el-icon>
-            </div>
-            <div class="file-details">
-              <div class="file-name">{{ file.name }}</div>
-              <div v-if="viewType === 'list'" class="file-meta">
-                <span>{{ formatSize(file.size) }}</span>
-                <span>{{ formatDate(file.updateTime) }}</span>
-              </div>
-            </div>
-            <div class="file-actions" v-if="viewType === 'list'">
-              <el-button circle size="small"><el-icon>
-                  <Download />
-                </el-icon></el-button>
-              <el-button circle size="small"><el-icon>
-                  <Share />
-                </el-icon></el-button>
-              <el-button circle size="small"><el-icon>
-                  <More />
-                </el-icon></el-button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
-    <el-dialog v-model="folderDialog" title="新建文件夹" width="30%">
-      <el-form :model="newFolder">
-        <el-form-item label="文件夹名称">
-          <el-input v-model="newFolder.name" placeholder="请输入文件夹名称" />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="folderDialog = false">取消</el-button>
-          <el-button type="primary" @click="confirmCreateFolder">确认</el-button>
-        </div>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
@@ -365,256 +320,123 @@ onMounted(() => {
 .cloud-disk-container {
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  height: calc(100vh - 120px);
-  min-height: 600px;
+  gap: 2.4rem;
+  padding: 2rem;
+  /* background-color: #f5f5f5; */
+  border-radius: 1rem;
+  font-size: 1.4rem;
 }
 
 .disk-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
 }
 
 .disk-header h1 {
-  font-size: 26px;
-  color: #303133;
-  margin: 0;
+  font-size: 2.6rem;
+  color: #333;
 }
 
 .disk-actions {
   display: flex;
-  gap: 12px;
   align-items: center;
+  gap: 1.2rem;
 }
 
-.search-input {
-  width: 240px;
+.disk-actions .search-input {
+  width: 24rem;
 }
 
 .navigation-path {
-  background-color: #f8f9fa;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  background-color: #f8f8f8;
+  border-radius: 0.8rem;
+  padding: 16px 10px;
 }
 
 .disk-content {
   display: flex;
-  flex: 1;
-  gap: 24px;
-  overflow: hidden;
+  gap: 2rem;
 }
 
 .sidebar {
-  width: 220px;
-  border-radius: 8px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 2rem;
 }
 
 .storage-info {
-  background-color: #f8f9fa;
-  padding: 16px;
-  border-radius: 8px;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  background-color: #f8f8f8;
+  border-radius: 1rem;
+  padding: 12px 16px;
 }
 
 .storage-text {
   display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.storage-progress {
-  margin-top: 8px;
+  gap: 2rem;
 }
 
 .file-categories {
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background-color: #f8f8f8;
+  border-radius: 1rem;
+  padding: 12px 16px;
+  font-size: 1.6rem;
+  font-weight: 500;
 }
 
-.category-title {
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 16px;
-  color: #303133;
+.category-icon {
+  margin-right: 1.2rem;
+  font-size: 1.8rem;
+  color: #409eff;
 }
 
 .category-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  justify-items: center;
+  font-size: 1.6rem;
+  font-weight: normal;
+  gap: 1rem;
 }
 
 .category-item {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
-  border-radius: 6px;
+  padding: 1rem 1.2rem;
   cursor: pointer;
+  border-radius: 0.6rem;
   transition: background-color 0.2s;
+}
+
+.file-count {
+  margin-left: auto;
+  background-color: #f0f2f5;
+  padding: 0.2rem 0.8rem;
+  border-radius: 1rem;
+  font-size: 1.2rem;
 }
 
 .category-item:hover {
   background-color: #ecf5ff;
 }
 
-.category-icon {
-  margin-right: 12px;
-  font-size: 18px;
-  color: #409eff;
-}
-
-.file-count {
-  margin-left: auto;
-  background-color: #f0f2f5;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 12px;
-  color: #606266;
-}
-
 .files-area {
   flex: 1;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  border-radius: 1rem 1rem 0 0;
+  box-shadow: 1rem 1rem 2rem rgba(0, 0, 0, 0.1);
 }
 
 .view-controls {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.loading-container,
-.empty-state {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  flex: 1;
+  padding: 1.2rem 2.4rem;
 }
 
-.files-list {
-  flex: 1;
-  overflow-y: auto;
-}
 
-.grid-view {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 16px;
-  padding: 10px;
-}
-
-.list-view .file-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid #ebeef5;
-}
-
-.list-view .file-item:last-child {
-  border-bottom: none;
-}
-
-.grid-view .file-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px;
-  border-radius: 8px;
-  transition: all 0.2s;
-  text-align: center;
-  height: 8rem;
-}
-
-.grid-view .file-item:hover {
-  background-color: #f5f7fa;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.grid-view .file-icon {
-  font-size: 40px;
-  margin-bottom: 10px;
-  color: #409eff;
-}
-
-.list-view .file-icon {
-  font-size: 24px;
-  margin-right: 16px;
-  color: #409eff;
-}
-
-.file-name {
-  word-break: break-all;
-  font-size: 1.4rem;
-  color: #303133;
-}
-
-.grid-view .file-name {
-  max-width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.list-view .file-details {
-  flex: 1;
-}
-
-.file-meta {
-  display: flex;
-  gap: 24px;
-  color: #909399;
-  font-size: 13px;
-  margin-top: 4px;
-}
-
-.file-actions {
-  display: flex;
-  gap: 8px;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.list-view .file-item:hover .file-actions {
-  opacity: 1;
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-  .disk-content {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-  }
-
-  .disk-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .disk-actions {
-    width: 100%;
-    flex-wrap: wrap;
-  }
-
-  .search-input {
-    width: 100%;
-  }
-}
 </style>

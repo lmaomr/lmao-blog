@@ -196,38 +196,36 @@ const menuItems = [
 
 <template>
   <div class="nav-header">
-    <div class="nav-container">
-      <div class="logo">
-        lmao's blog
-      </div>
-      <div class="nav-menu">
-        <el-menu mode="horizontal" :router="true" class="menu">
-          <el-menu-item v-for="item in menuItems" :key="item.path" :index="item.path">
-            {{ item.title }}
-          </el-menu-item>
-        </el-menu>
-      </div>
-      <div class="nav-right">
-        <template v-if="userStore.isLoggedIn">
-          <el-dropdown @command="handleCommand">
-            <div class="user-dropdown">
-              <el-avatar :size="32" :src="userStore.userInfo.avatarUrl" />
-              <span class="username">{{ userStore.userInfo.username }}</span>
-            </div>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item command="profile">个人中心</el-dropdown-item>
-                <el-dropdown-item command="settings">设置</el-dropdown-item>
-                <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </template>
-        <template v-else>
-          <el-button type="primary" @click="showLoginDialog">登录</el-button>
-          <el-button type="primary" plain @click="showRegisterDialog">注册</el-button>
-        </template>
-      </div>
+    <div class="logo">
+      lmao's blog
+    </div>
+    <div class="nav-menu">
+      <el-menu mode="horizontal" :router="true" class="menu">
+        <el-menu-item v-for="item in menuItems" :key="item.path" :index="item.path">
+          {{ item.title }}
+        </el-menu-item>
+      </el-menu>
+    </div>
+    <div class="nav-right">
+      <template v-if="userStore.isLoggedIn">
+        <el-dropdown class="no-outline" @command="handleCommand">
+          <div class="user-dropdown">
+            <el-avatar :size="32" :src="userStore.userInfo.avatarUrl" />
+            <span class="username">{{ userStore.userInfo.username }}</span>
+          </div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="profile">个人中心</el-dropdown-item>
+              <el-dropdown-item command="settings">设置</el-dropdown-item>
+              <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </template>
+      <template v-else>
+        <el-button type="primary" @click="showLoginDialog">登录</el-button>
+        <el-button type="primary" plain @click="showRegisterDialog">注册</el-button>
+      </template>
     </div>
   </div>
 
@@ -302,65 +300,53 @@ const menuItems = [
 
 <style scoped>
 .nav-header {
-  /* display: flex; */
-  padding: 0 1.5rem;
-  height: 60px;
-  width: 100%;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
-  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.091); /* 添加单位 + 提高透明度 */
+  border-radius: 1.2rem;
+  padding: 0 4rem;
 }
 
-.nav-container {
-  /* justify-content: space-between;
-  padding: 0 1rem; */
-  display: flex; /* Flex 布局 */
-  align-items: center; /* 垂直居中 */
-  /* max-width: 1200px; */
-  margin: 0 auto; /* 水平居中 */
-  height: 60px; /* 导航栏高度 */
+.nav-header:hover {
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.245); /* 添加单位 + 提高透明度 */
+  border-radius: 1.2rem;
 }
 
 .logo {
-  display: flex;
-  padding-left: 1rem;
-  font-size: 1.5em;
+  font-size: 2.5rem;
   font-weight: bold;
 }
 
-.logo a {
-  color: #303133;
-  text-decoration: none;
+.logo:hover {
+  color: #409eff;
+  /* cursor: pointer; */
 }
 
-/* 导航菜单（居中） */
-.nav-menu {
-  flex: 1; /* 占据剩余空间 */
-  display: flex;
-  justify-content: center; /* 水平居中 */
+/* .nav-menu {
+
+} */
+
+.el-menu--horizontal.el-menu {
+    border-bottom: none;
 }
 
-/* 登录/注册（最右） */
-.nav-right {
-  margin-left: auto; /* 自动推到最右 */
-  display: flex;
-  gap: 10px; /* 按钮间距 */
+/* .nav-right {
+} */
+
+/* 自定义类名移除黑框 */
+:deep(.no-outline .el-tooltip__trigger:focus-visible) {
+  outline: none;
 }
 
 .user-dropdown {
   display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 0 10px;
+  align-items: center;     /* 水平居中（交叉轴） */
+  justify-content: center; /* 垂直居中（主轴，可选） */
+  gap: 1rem;               /* 可选：设置头像和文字间距 */
 }
 
-.username {
-  margin-left: 8px;
-  font-size: 14px;
-}
-
-.el-button {
-  margin-left: 10px;
-}
 
 /* 登录弹出框样式 */
 .login-dialog-content {
@@ -401,7 +387,7 @@ const menuItems = [
   border-radius: 4px;
 }
 
-.btn p{
+.btn p {
   display: flex;
   align-items: center;
   margin: 0;

@@ -8,16 +8,24 @@
 }
 
 a,
-.green {
+h1,
+h2,
+h3,
+h4,
+h5 { 
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
+  color: #409eff;
   transition: 0.4s;
   padding: 3px;
 }
 
 @media (hover: hover) {
   a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    background-color: hsla(0, 0%, 65%, 0.2);
+    border-radius: 0.75rem;
+  }
+  .hover:hover {
+    box-shadow: 0.25rem 0.5rem 1.5rem 0.1rem rgba(58, 58, 58, 0.155)
   }
 }
 

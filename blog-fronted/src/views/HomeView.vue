@@ -67,71 +67,69 @@ onMounted(() => {
   <div class="home-view">
     <el-row :gutter="40">
       <el-col :span="17" :md="17" :sm="24">
-        <div class="article-card">
-          <el-card v-for="post in articles" :key="post.id" class="article-card">
-            <h3 class="article-title">
-              <router-link :to="'/article/' + post.id">
-                {{ truncate(post.title, 20) }}
-              </router-link>
-            </h3>
-            <div class="article-info">
-              <span class="article-date">
-                <el-icon>
-                  <Calendar />
-                </el-icon>
-                {{ post.createTime.slice(0, 10) }}
-              </span>
-              <span>
-                <el-icon>
-                  <View />
-                </el-icon>
-                {{ post.view }}
-              </span>
-              <span>
-                <el-icon>
-                  <ChatLineRound />
-                </el-icon>
-                {{ getCommentsLength(post.id) }}
-              </span>
-              <span class="article-author">
-                <el-icon>
-                  <User />
-                </el-icon>
-                {{ post.author }}
-              </span>
-            </div>
-            <div class="article-content">
-              <p>{{ truncate(post.content, 50) }} <!-- 超过50字符显示省略号 --></p>
-            </div>
-            <div class="article-footer">
-              <div class="article-tags">
-                <div class="article-tag" v-for="tag in post.tags" :key="tag.id">
-                  <el-tag>
-                    {{ tag.name }}
-                  </el-tag>
-                </div>
-              </div>
-              <div class="article-read-more">
-                <router-link :to="'/article/' + post.id">
-                  阅读全文
-                  <el-icon class="el-icon--right">
-                    <ArrowRight />
-                  </el-icon>
-                </router-link>
-              </div>
-
-            </div>
-          </el-card>
-          <div class="pagination-block">
-            <el-pagination layout="prev, pager, next" :total="pagination.total" :page-size="pagination.pageSize"
-              :current-page="pagination.current" @current-change="handlePageChange"
-              hide-on-single-page />
+        <el-card v-for="post in articles" :key="post.id" class="article-card hover">
+          <h3 class="article-title">
+            <router-link :to="'/article/' + post.id">
+              {{ truncate(post.title, 20) }}
+            </router-link>
+          </h3>
+          <div class="article-info">
+            <span class="article-date">
+              <el-icon>
+                <Calendar />
+              </el-icon>
+              {{ post.createTime.slice(0, 10) }}
+            </span>
+            <span>
+              <el-icon>
+                <View />
+              </el-icon>
+              {{ post.view }}
+            </span>
+            <span>
+              <el-icon>
+                <ChatLineRound />
+              </el-icon>
+              {{ getCommentsLength(post.id) }}
+            </span>
+            <span class="article-author">
+              <el-icon>
+                <User />
+              </el-icon>
+              {{ post.author }}
+            </span>
           </div>
+          <div class="article-content">
+            <p>{{ truncate(post.content, 50) }} <!-- 超过50字符显示省略号 --></p>
+          </div>
+          <div class="article-footer">
+            <div class="article-tags">
+              <div class="article-tag" v-for="tag in post.tags" :key="tag.id">
+                <el-tag>
+                  {{ tag.name }}
+                </el-tag>
+              </div>
+            </div>
+            <div class="article-read-more">
+              <router-link :to="'/article/' + post.id">
+                阅读全文
+                <el-icon class="el-icon--right">
+                  <ArrowRight />
+                </el-icon>
+              </router-link>
+            </div>
+
+          </div>
+        </el-card>
+        <div class="pagination-block">
+          <el-pagination layout="prev, pager, next" :total="pagination.total" :page-size="pagination.pageSize"
+            :current-page="pagination.current" @current-change="handlePageChange" hide-on-single-page />
         </div>
       </el-col>
+
       <el-col :span="7" :md="7" :sm="0">
         <div class="user-card">
-          <el-card>
+          <el-card class="hover">
             <template #header>
               <div class="about-me">
                 <span>关于我</span>
@@ -147,7 +145,7 @@ onMounted(() => {
             </div>
           </el-card>
 
-          <el-card class="category-card">
+          <el-card class="category-card hover">
             <template #header>
               <div class="card-header">
                 <span>分类</span>
@@ -156,7 +154,7 @@ onMounted(() => {
             <!-- <el-tree :data="categories" :props="defaultProps" @node-click="handleNodeClick" /> -->
           </el-card>
 
-          <el-card class="tag-card">
+          <el-card class="tag-card hover">
             <template #header>
               <div class="card-header">
                 <span>标签</span>
@@ -190,7 +188,6 @@ onMounted(() => {
   align-items: center;
   gap: 4px;
   margin-right: 1.35rem;
-
 }
 
 .article-tags {
@@ -208,8 +205,10 @@ onMounted(() => {
 
 .pagination-block {
   display: flex;
-  justify-content: center; /* 水平居中 */
-  margin-top: 20px;       /* 可选：添加顶部间距 */
+  justify-content: center;
+  /* 水平居中 */
+  margin-top: 20px;
+  /* 可选：添加顶部间距 */
 }
 
 .user-card .el-card {

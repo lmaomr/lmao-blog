@@ -55,44 +55,42 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="app-container">
-    <el-container>
-      <el-header class="header">
-        <NavHeader />
-      </el-header>
-      <el-main>
-        <router-view />
-      </el-main>
-      <el-footer class="footer">
-        <NavFooter />
-      </el-footer>
-    </el-container>
-  </div>
+  <el-container class="app-container">
+    <el-header class="header">
+      <NavHeader />
+    </el-header>
+    <el-main class="el-main">
+      <router-view />
+    </el-main>
+    <el-footer class="footer">
+      <NavFooter />
+    </el-footer>
+  </el-container>
 </template>
 
 <style scoped>
 .app-container {
   display: flex;
   flex-direction: column;
-}
-
-.el-main {
   min-height: 100vh;
-  /* margin: 0 auto; */
 }
 
 .header {
-  display: flex;
-  justify-content: center;
-  background-color: #ffffff;
-}
-
-.el-header {
+  flex: 0 0 20%;
   --el-header-padding: 0;
 }
 
+.el-main {
+  flex: 1;
+  min-height: calc(100vh - 60px);
+}
+
+/* .el-header {
+  
+} */
+
 .footer {
-  --el-footer-height: 14rem;
+  flex: 0 0 18rem;
   --el-footer-padding: 0;
 }
 </style>
