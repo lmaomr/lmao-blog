@@ -83,6 +83,7 @@ onMounted(() => {
 .el-main {
   flex: 1;
   min-height: calc(100vh - 60px);
+  /* padding: 0; */
 }
 
 /* .el-header {

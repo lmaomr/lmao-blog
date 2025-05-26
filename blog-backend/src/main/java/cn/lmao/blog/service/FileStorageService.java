@@ -77,7 +77,6 @@ public class FileStorageService {
      * 获取当前用户ID（需要根据实际认证系统实现）
      */
     // private Long getCurrentUserId() {
-    // // TODO: 替换为从安全上下文获取真实用户ID
     // return 1L; // 示例值
     // }
 }

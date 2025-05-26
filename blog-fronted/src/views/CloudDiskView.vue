@@ -535,7 +535,6 @@ onMounted(() => {
   border-radius: 8px;
   transition: all 0.2s;
   text-align: center;
-  height: 8rem;
 }
 
 .grid-view .file-item:hover {
@@ -560,10 +559,13 @@ onMounted(() => {
   word-break: break-all;
   font-size: 1.4rem;
   color: #303133;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .grid-view .file-name {
-  max-width: 100%;
+  max-width: 12rem;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -575,9 +577,9 @@ onMounted(() => {
 
 .file-meta {
   display: flex;
-  gap: 24px;
+  gap: 2rem;
   color: #909399;
-  font-size: 13px;
+  font-size: 1.3rem;
   margin-top: 4px;
 }
 

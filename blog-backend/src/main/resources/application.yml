@@ -112,4 +112,4 @@ jwt:
 file:
   upload:
     # 上传文件存储路径（生产环境必须使用环境变量或配置中心）
-    path: D:\Home\LmaoBlog\Uploads
+    path: E:\Home\cloud\uploads
